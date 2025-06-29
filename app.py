@@ -3,14 +3,14 @@ import requests
 import random
 import time
 import os
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image
 import base64
 
 # 頁面配置
 st.set_page_config(
     page_title="🔮 AI塔羅占卜",
     page_icon="🔮",
-    layout="centered",
+    layout="wide",
     initial_sidebar_state="collapsed"
 )
 
@@ -126,413 +126,374 @@ def get_fallback_reading(card_name, area, question, keywords):
     }
     return fallback_interpretations.get(area, fallback_interpretations['general'])
 
-def create_stars_background():
-    """創建星空背景動畫"""
-    return """
-    <div class="stars"></div>
-    <div class="stars2"></div>
-    <div class="stars3"></div>
-    """
-
-def apply_dark_mystical_theme():
-    """應用黑色神秘主題"""
+def apply_original_styles():
+    """應用與原始網站完全相同的樣式"""
     st.markdown("""
     <style>
     /* 隱藏 Streamlit 預設元素 */
     .block-container {
-        padding-top: 0rem;
-        padding-bottom: 0rem;
-        background: transparent;
+        padding: 0 !important;
+        max-width: 100% !important;
     }
     
-    /* 主背景 */
     .stApp {
-        background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
         min-height: 100vh;
-        position: relative;
-        overflow-x: hidden;
+        font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
     }
     
-    /* 星空動畫 */
-    .stars, .stars2, .stars3 {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
+    /* 完全隱藏 Streamlit 的 header 和 footer */
+    header[data-testid="stHeader"] {
+        display: none !important;
     }
     
-    .stars {
-        background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="1" fill="white" opacity="0.8"/><circle cx="80" cy="40" r="0.5" fill="white" opacity="0.6"/><circle cx="40" cy="70" r="1" fill="white" opacity="0.8"/><circle cx="90" cy="10" r="0.5" fill="white" opacity="0.7"/><circle cx="10" cy="90" r="0.8" fill="white" opacity="0.5"/></svg>') repeat;
-        animation: move-stars 50s linear infinite;
+    .stDeployButton {
+        display: none !important;
     }
     
-    .stars2 {
-        background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="30" cy="30" r="0.5" fill="white" opacity="0.7"/><circle cx="70" cy="70" r="1" fill="white" opacity="0.5"/><circle cx="50" cy="10" r="0.8" fill="white" opacity="0.6"/></svg>') repeat;
-        animation: move-stars 100s linear infinite;
-    }
-    
-    .stars3 {
-        background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="60" cy="20" r="0.3" fill="white" opacity="0.8"/><circle cx="25" cy="80" r="0.6" fill="white" opacity="0.4"/><circle cx="85" cy="60" r="0.4" fill="white" opacity="0.7"/></svg>') repeat;
-        animation: move-stars 150s linear infinite;
-    }
-    
-    @keyframes move-stars {
-        from { transform: translateY(0px); }
-        to { transform: translateY(-100vh); }
+    /* 主容器 */
+    .main-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
     
     /* 主標題 */
     .main-title {
         text-align: center;
-        color: #e6e6fa;
+        color: white;
         font-size: 3.5rem;
-        font-weight: 300;
-        margin: 2rem 0;
-        text-shadow: 0 0 20px rgba(230, 230, 250, 0.5);
-        letter-spacing: 3px;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        letter-spacing: 2px;
     }
     
     .subtitle {
         text-align: center;
-        color: #9370db;
-        font-size: 1.3rem;
+        color: rgba(255,255,255,0.9);
+        font-size: 1.4rem;
         margin-bottom: 3rem;
         font-weight: 300;
-        text-shadow: 0 0 10px rgba(147, 112, 219, 0.3);
     }
     
-    /* 輸入區域 */
+    /* 主要內容區域 */
+    .content-area {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 3rem;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+        margin: 0 auto;
+        max-width: 800px;
+        width: 100%;
+    }
+    
+    /* 表單樣式 */
+    .form-section {
+        margin-bottom: 2rem;
+    }
+    
+    .form-label {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.8rem;
+        display: block;
+    }
+    
+    /* 文字輸入區域 */
     .stTextArea > div > div > textarea {
-        background: rgba(0, 0, 0, 0.7) !important;
-        border: 2px solid #483d8b !important;
-        border-radius: 15px !important;
-        color: #e6e6fa !important;
-        font-size: 1.1rem !important;
+        border: 2px solid #e0e0e0 !important;
+        border-radius: 12px !important;
         padding: 1rem !important;
-        box-shadow: 0 0 20px rgba(72, 61, 139, 0.3) !important;
-    }
-    
-    .stTextArea > div > div > textarea:focus {
-        border-color: #9370db !important;
-        box-shadow: 0 0 30px rgba(147, 112, 219, 0.5) !important;
-    }
-    
-    .stSelectbox > div > div > div {
-        background: rgba(0, 0, 0, 0.7) !important;
-        border: 2px solid #483d8b !important;
-        border-radius: 15px !important;
-        color: #e6e6fa !important;
-    }
-    
-    /* 按鈕 */
-    .stButton > button {
-        background: linear-gradient(45deg, #483d8b, #9370db) !important;
-        color: white !important;
-        border: none !important;
-        border-radius: 25px !important;
-        padding: 0.8rem 3rem !important;
-        font-size: 1.2rem !important;
-        font-weight: 600 !important;
-        text-transform: uppercase !important;
-        letter-spacing: 2px !important;
-        box-shadow: 0 10px 30px rgba(147, 112, 219, 0.4) !important;
+        font-size: 1rem !important;
+        background: white !important;
+        color: #333 !important;
+        min-height: 120px !important;
+        resize: vertical !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
         transition: all 0.3s ease !important;
     }
     
+    .stTextArea > div > div > textarea:focus {
+        border-color: #667eea !important;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3) !important;
+        outline: none !important;
+    }
+    
+    /* 下拉選單 */
+    .stSelectbox > div > div > div {
+        border: 2px solid #e0e0e0 !important;
+        border-radius: 12px !important;
+        background: white !important;
+        color: #333 !important;
+        font-size: 1rem !important;
+        padding: 0.5rem !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+    }
+    
+    .stSelectbox > div > div > div:focus-within {
+        border-color: #667eea !important;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3) !important;
+    }
+    
+    /* 按鈕樣式 */
+    .stButton > button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 50px !important;
+        padding: 1rem 3rem !important;
+        font-size: 1.3rem !important;
+        font-weight: 600 !important;
+        text-transform: none !important;
+        letter-spacing: 1px !important;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4) !important;
+        transition: all 0.3s ease !important;
+        width: 100% !important;
+        margin-top: 1rem !important;
+    }
+    
     .stButton > button:hover {
-        transform: translateY(-3px) !important;
-        box-shadow: 0 15px 40px rgba(147, 112, 219, 0.6) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5) !important;
+    }
+    
+    .stButton > button:active {
+        transform: translateY(0) !important;
     }
     
     /* 卡牌顯示區域 */
-    .card-reveal {
-        background: rgba(0, 0, 0, 0.8);
-        border: 3px solid #9370db;
-        border-radius: 20px;
-        padding: 2rem;
-        margin: 2rem 0;
+    .card-container {
         text-align: center;
-        box-shadow: 0 0 40px rgba(147, 112, 219, 0.4);
-        animation: cardAppear 1s ease-out;
+        margin: 2rem 0;
+        padding: 2rem;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
     }
     
-    @keyframes cardAppear {
-        from {
-            opacity: 0;
-            transform: scale(0.8) rotateY(-180deg);
-        }
-        to {
-            opacity: 1;
-            transform: scale(1) rotateY(0deg);
-        }
+    .card-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #667eea;
+        margin-bottom: 1rem;
     }
     
     .card-name {
-        color: #e6e6fa;
-        font-size: 3rem;
-        font-weight: 300;
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: #333;
         margin: 1rem 0;
-        text-shadow: 0 0 20px rgba(230, 230, 250, 0.5);
     }
     
     .card-keywords {
-        color: #dda0dd;
-        font-size: 1.3rem;
-        margin: 1rem 0;
+        font-size: 1.2rem;
+        color: #666;
         font-style: italic;
+        margin-bottom: 1.5rem;
     }
     
-    /* 解讀區域 */
-    .interpretation-box {
-        background: rgba(16, 16, 48, 0.9);
-        border: 2px solid #6a5acd;
-        border-radius: 20px;
+    .card-image {
+        max-width: 300px;
+        margin: 1rem auto;
+        border-radius: 10px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+    
+    /* 解讀結果區域 */
+    .interpretation-container {
+        background: #f8f9fa;
+        border-radius: 15px;
         padding: 2rem;
         margin: 2rem 0;
-        box-shadow: 0 0 30px rgba(106, 90, 205, 0.3);
-        animation: fadeInUp 1s ease-out 0.5s both;
-    }
-    
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        border-left: 5px solid #667eea;
     }
     
     .interpretation-title {
-        color: #dda0dd;
         font-size: 1.8rem;
-        font-weight: 400;
+        font-weight: 600;
+        color: #333;
         margin-bottom: 1.5rem;
         text-align: center;
     }
     
     .interpretation-text {
-        color: #e6e6fa;
         font-size: 1.1rem;
         line-height: 1.8;
+        color: #444;
         text-align: justify;
     }
     
     /* 載入動畫 */
-    .loading-mystical {
+    .loading-container {
         text-align: center;
         padding: 3rem;
-        color: #9370db;
-        font-size: 1.5rem;
-        animation: pulse 2s infinite;
+        color: #667eea;
+        font-size: 1.3rem;
     }
     
-    @keyframes pulse {
-        0%, 100% { opacity: 0.6; }
-        50% { opacity: 1; }
+    .loading-spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #667eea;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
     }
     
-    /* 隱藏不必要元素 */
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* 響應式設計 */
+    @media (max-width: 768px) {
+        .main-title {
+            font-size: 2.5rem;
+        }
+        
+        .content-area {
+            padding: 2rem 1.5rem;
+            margin: 0 1rem;
+        }
+        
+        .card-image {
+            max-width: 250px;
+        }
+    }
+    
+    /* 隱藏標籤 */
+    .stTextArea > label,
+    .stSelectbox > label {
+        display: none !important;
+    }
+    
+    /* 進度條 */
     .stProgress > div > div {
-        background: linear-gradient(90deg, #483d8b, #9370db) !important;
+        background: linear-gradient(90deg, #667eea, #764ba2) !important;
         border-radius: 10px !important;
-    }
-    
-    /* 標籤 */
-    label {
-        color: #dda0dd !important;
-        font-size: 1.1rem !important;
-        font-weight: 500 !important;
-    }
-    
-    /* 過場動畫 */
-    .transition-screen {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 100%);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-        animation: fadeOut 1s ease-out 3s both;
-    }
-    
-    .transition-text {
-        color: #9370db;
-        font-size: 2rem;
-        text-align: center;
-        margin: 1rem 0;
-        animation: glow 2s ease-in-out infinite alternate;
-    }
-    
-    @keyframes glow {
-        from { text-shadow: 0 0 20px rgba(147, 112, 219, 0.5); }
-        to { text-shadow: 0 0 30px rgba(147, 112, 219, 0.8); }
-    }
-    
-    @keyframes fadeOut {
-        to { opacity: 0; pointer-events: none; }
+        height: 8px !important;
     }
     </style>
     """, unsafe_allow_html=True)
 
-def show_question_page():
-    """顯示問題輸入頁面"""
-    apply_dark_mystical_theme()
+def main():
+    # 應用原始樣式
+    apply_original_styles()
     
-    # 星空背景
-    st.markdown(create_stars_background(), unsafe_allow_html=True)
+    # 主容器
+    st.markdown('<div class="main-container">', unsafe_allow_html=True)
     
     # 主標題
-    st.markdown('<h1 class="main-title">🔮 塔羅神諭</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="subtitle">✨ 探尋命運的指引，聆聽宇宙的智慧 ✨</p>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-title">🔮 AI塔羅占卜</h1>', unsafe_allow_html=True)
+    st.markdown('<p class="subtitle">✨ 探索內心智慧，獲得人生指引 ✨</p>', unsafe_allow_html=True)
     
-    # 輸入區域
-    col1, col2, col3 = st.columns([1, 2, 1])
+    # 主要內容區域
+    st.markdown('<div class="content-area">', unsafe_allow_html=True)
     
-    with col2:
-        st.markdown("### 💭 向宇宙提出您的問題")
+    # 表單區域
+    col1, col2 = st.columns([2, 1])
+    
+    with col1:
+        st.markdown('<div class="form-section">', unsafe_allow_html=True)
+        st.markdown('<label class="form-label">💭 請輸入您想詢問的問題</label>', unsafe_allow_html=True)
         question = st.text_area(
             "",
-            placeholder="在星空下，靜心思考您最想了解的問題...",
+            placeholder="例如：我在工作上遇到困難，應該如何處理？",
             height=120,
             label_visibility="collapsed"
         )
-        
-        st.markdown("### 🌟 選擇問題的領域")
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown('<div class="form-section">', unsafe_allow_html=True)
+        st.markdown('<label class="form-label">🎯 選擇問題領域</label>', unsafe_allow_html=True)
         area = st.selectbox(
             "",
             options=['general', 'love', 'career', 'spirituality'],
             format_func=lambda x: {
-                'general': '🌌 整體生活指引',
-                'love': '💜 愛情與關係', 
-                'career': '⭐ 事業與財富',
-                'spirituality': '🔮 靈性成長'
+                'general': '整體生活指引',
+                'love': '愛情與關係',
+                'career': '事業與財富',
+                'spirituality': '靈性成長'
             }[x],
             label_visibility="collapsed"
         )
-        
-        st.markdown("<br>", unsafe_allow_html=True)
-        
-        if st.button("🌙 開始神聖占卜", type="primary", use_container_width=True):
-            if not question.strip():
-                st.error("🌟 請先向宇宙傾訴您的問題")
-                return
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    # 占卜按鈕
+    if st.button("🔮 開始占卜", type="primary"):
+        if not question.strip():
+            st.error("請輸入您的問題後再開始占卜")
+        else:
+            # 載入動畫
+            with st.container():
+                st.markdown("""
+                <div class="loading-container">
+                    <div class="loading-spinner"></div>
+                    <div>🌟 正在為您抽牌並解讀...</div>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                # 進度條
+                progress_bar = st.progress(0)
+                for i in range(100):
+                    time.sleep(0.02)
+                    progress_bar.progress(i + 1)
+                progress_bar.empty()
             
-            # 儲存到 session state
-            st.session_state.question = question
-            st.session_state.area = area
-            st.session_state.page = "result"
-            st.rerun()
-
-def show_transition():
-    """顯示過場動畫"""
-    st.markdown("""
-    <div class="transition-screen">
-        <div class="transition-text">🌟 星辰正在排列</div>
-        <div class="transition-text">🔮 命運之牌即將顯現</div>
-        <div class="transition-text">✨ 請靜心接收宇宙的訊息</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-def show_result_page():
-    """顯示結果頁面"""
-    apply_dark_mystical_theme()
-    
-    # 星空背景
-    st.markdown(create_stars_background(), unsafe_allow_html=True)
-    
-    question = st.session_state.get('question', '')
-    area = st.session_state.get('area', 'general')
-    
-    # 過場動畫
-    if 'result_shown' not in st.session_state:
-        show_transition()
-        
-        with st.spinner(""):
+            # 清除載入動畫
+            st.empty()
+            
             # 抽牌
             selected_card = random.choice(TAROT_DECK)
-            st.session_state.selected_card = selected_card
             
-            # 載入AI解讀
-            interpretation = get_tarot_reading(
-                selected_card['name'],
-                area,
-                question,
-                selected_card['keywords']
-            )
-            st.session_state.interpretation = interpretation
-            st.session_state.result_shown = True
-            
-            time.sleep(3)  # 等待過場動畫
-            st.rerun()
-    
-    else:
-        selected_card = st.session_state.selected_card
-        interpretation = st.session_state.interpretation
-        
-        # 顯示結果
-        col1, col2, col3 = st.columns([1, 2, 1])
-        
-        with col2:
-            # 卡牌顯示
+            # 顯示卡牌結果
             st.markdown(f"""
-            <div class="card-reveal">
-                <div style="font-size: 2rem; margin-bottom: 1rem;">✨ 您的命運之牌 ✨</div>
+            <div class="card-container">
+                <div class="card-title">✨ 您抽到的牌卡 ✨</div>
                 <div class="card-name">{selected_card['name']}</div>
-                <div class="card-keywords">🔑 {' • '.join(selected_card['keywords'])}</div>
+                <div class="card-keywords">🔑 關鍵詞：{' • '.join(selected_card['keywords'])}</div>
             </div>
             """, unsafe_allow_html=True)
             
-            # 顯示卡牌圖片（如果存在）
+            # 顯示卡牌圖片
             card_image = load_card_image(selected_card)
             if card_image:
-                st.image(card_image, use_container_width=True)
+                col_img1, col_img2, col_img3 = st.columns([1, 2, 1])
+                with col_img2:
+                    st.image(card_image, use_container_width=True)
             
-            # 解讀結果
+            # 獲取 AI 解讀
+            with st.spinner("🤖 AI 正在為您解讀..."):
+                interpretation = get_tarot_reading(
+                    selected_card['name'],
+                    area,
+                    question,
+                    selected_card['keywords']
+                )
+            
+            # 顯示解讀結果
             st.markdown(f"""
-            <div class="interpretation-box">
-                <div class="interpretation-title">🔮 宇宙的神諭</div>
+            <div class="interpretation-container">
+                <div class="interpretation-title">🔮 您的塔羅解讀</div>
                 <div class="interpretation-text">{interpretation}</div>
             </div>
             """, unsafe_allow_html=True)
             
-            # 操作按鈕
-            col_a, col_b = st.columns(2)
-            with col_a:
-                if st.button("🌙 重新占卜", type="secondary", use_container_width=True):
-                    # 清除結果，回到問題頁面
-                    for key in ['selected_card', 'interpretation', 'result_shown']:
-                        if key in st.session_state:
-                            del st.session_state[key]
-                    st.session_state.page = "question"
-                    st.rerun()
-            
-            with col_b:
-                if st.button("🔮 新的問題", type="primary", use_container_width=True):
-                    # 清除所有狀態
-                    for key in list(st.session_state.keys()):
-                        del st.session_state[key]
-                    st.session_state.page = "question"
-                    st.rerun()
-
-def main():
-    # 初始化頁面狀態
-    if 'page' not in st.session_state:
-        st.session_state.page = "question"
+            # 重新占卜按鈕
+            if st.button("🔄 重新占卜", type="secondary"):
+                st.rerun()
     
-    # 根據頁面狀態顯示不同內容
-    if st.session_state.page == "question":
-        show_question_page()
-    elif st.session_state.page == "result":
-        show_result_page()
+    st.markdown('</div>', unsafe_allow_html=True)  # 結束 content-area
+    st.markdown('</div>', unsafe_allow_html=True)  # 結束 main-container
 
 if __name__ == "__main__":
     main()
