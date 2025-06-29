@@ -1,0 +1,23 @@
+# 環境變數
+.env
+.env.local
+.env.production
+
+# Streamlit secrets
+.streamlit/secrets.toml
+
+# 系統檔案
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE
+.vscode/
+.idea/
+
+# 日誌
+*.log
